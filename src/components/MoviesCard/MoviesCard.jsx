@@ -1,19 +1,28 @@
-import "./MoviesCard.css";
+import "./MoviesCardList.css";
+import { Preloader } from "../Preloader/Preloader";
 
-
-function MoviesCard ({ movie }) {
+function MoviesCardList({ movies, children , isLoading, isError }) {
+ 
   return (
-    <li>
-      <figure className="movies-card">
-        <img src={movie.imgSrc} alt={movie.imgName} className="movies-card__img" />
-        <div className="movies-card__title">
-          <figcaption className="movies-card__img-name">{movie.imgName}</figcaption>
-          <span className="movies-card__like-icon"></span>
-        </div>
-        <p className="movies-card__duration">{movie.duration}</p>
-      </figure>
-    </li>
+    <>
+      {isLoading ? (
+        <Preloader />
+      ) : isError ? (
+        <p className="movies__error-message">
+          Во время запроса произошла ошибка. Возможно, проблема с соединением
+          или сервер недоступен. Подождите немного и попробуйте ещё раз
+        </p>
+      ) : movies.length ? (
+        <section className="movies-card-list">
+          <ul className="movies-card-list__list">
+            {children}
+          </ul>
+        </section>
+      ) : (
+        <p className="movies__error-message">Ничего не найдено</p>
+      )}
+    </>
   );
 }
 
-export { MoviesCard };
+export { MoviesCardList };
