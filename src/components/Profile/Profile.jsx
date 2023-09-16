@@ -27,9 +27,9 @@ function Profile ({ onSignOut, isLoggedIn, onUpdateUser, serverError, isLoading}
   const watchEmail = watch('email');
 
   useEffect(() => {
-    if (currentUser.name) {
+    if (currentUser.userName) {
       setValue('email', currentUser.email);
-      setUserName(currentUser.name);
+      setUserName(currentUser.userName);
     };
   }, [currentUser, setValue]);
   
@@ -50,20 +50,20 @@ function Profile ({ onSignOut, isLoggedIn, onUpdateUser, serverError, isLoading}
     e.preventDefault();
     
     onUpdateUser({
-      name: formValues['user-name'],
+      userName: formValues['user-name'],
       email: getValues('email'),
     });
   }
 
   function validateForm(){
-    return  ((userName === currentUser.name) && (watchEmail === currentUser.email)) || (!isFormValid || errors?.email);
+    return  ((userName === currentUser.userName) && (watchEmail === currentUser.email)) || (!isFormValid || errors?.email);
   }
 
   return (
     <>
       <Header isLoggedIn={isLoggedIn} />
       <main className="profile">
-        <h2 className="profile__header">Привет, {currentUser.name}!</h2>
+        <h2 className="profile__header">Привет, {currentUser.userName}!</h2>
         <form
           name="profile-form"
           method="POST"
