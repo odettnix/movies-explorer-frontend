@@ -10,4 +10,4 @@ Frontend https://odettnix.movies.nomoredomainsicu.ru/
 
 Backend https://api.odettnix.movies.nomoredomainsicu.ru/
 
-Ссылка на пул реквест ...
+Ссылка на пул реквест https://github.com/odettnix/movies-explorer-frontend/pull/3
