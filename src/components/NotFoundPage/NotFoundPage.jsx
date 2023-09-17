@@ -4,9 +4,11 @@ import { useNavigate } from "react-router-dom";
 function NotFoundPage() {
   const navigate = useNavigate();
 
-  function handleClick() {
-    navigate(-1, { replace: true });
-  }
+  const handleGoBack = () => {
+    navigate('/') // Вернуться на предыдущую страницу в истории браузера
+
+    // console.log(window.history.back)
+  };
 
   return (
     <div className="notfoundpage">
@@ -14,12 +16,13 @@ function NotFoundPage() {
       <p className="notfoundpage__errortext">Страница не найдена</p>
       <button
         type="button"
-        onClick={handleClick}
+        onClick={handleGoBack}
         className="notfoundpage__backbtn"
-      >Назад</button>
+      >
+        Назад
+      </button>
     </div>
   );
 }
-  
+
 export { NotFoundPage };
-  

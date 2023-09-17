@@ -59,7 +59,7 @@ class Api {
       const response = await fetch(`${this._baseUrl}/users/me`, {
         method: 'PATCH',
         headers: {
-          ...this._headers, // Используйте расширение объекта для правильной передачи заголовков
+          ...this._headers,
           Authorization: `Bearer ${jwt}`,
         },
         body: JSON.stringify({
@@ -69,12 +69,12 @@ class Api {
       });
   
       if (!response.ok) {
-        throw new Error('Failed to update user information'); // Бросаем ошибку, если ответ сервера не успешен
+        throw new Error('Failed to update user information');
       }
   
       return await response.json();
     } catch (error) {
-      throw error; // Перебрасываем ошибку, чтобы обработать её в вызывающем коде
+      throw error;
     }
   };
 
@@ -129,40 +129,6 @@ class Api {
       return this._handlePromise(res);
     })
   };
-
-  // getMyMovies() {
-  //   return fetch(`${this._baseUrl}/movies`, {
-  //       method: 'GET',
-  //       headers: this._headers,
-  //       credentials: 'include',
-  //   })
-  //   .then((res) => {
-  //     return this._handlePromise(res);
-  //   })
-  // }
-
-  // addNewMovie(movie) {
-  //   return fetch(`${this._baseUrl}/movies`, {
-  //       method: 'POST',
-  //       headers: this._headers,
-  //       credentials: 'include',
-  //       body: JSON.stringify(movie),
-  //   })
-  //   .then((res) => {
-  //     return this._handlePromise(res);
-  //   })
-  // }
-
-  // deleteMovie(movieId) {
-  //   return fetch(`${this._baseUrl}/movies/${movieId}`, {
-  //       method: 'DELETE',
-  //       headers: this._headers,
-  //       credentials: 'include',
-  //   })
-  //   .then((res) => {
-  //     return this._handlePromise(res);
-  //   })
-  // }
 
 }
 

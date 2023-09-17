@@ -38,6 +38,12 @@ function App() {
     handleTokenCheck();
   }, [isLoggedIn]);
 
+  useEffect(() => {
+    mainApi.getSavedMovies()
+      .then((movies) => setSavedMovies(movies))
+      .catch((err) => console.warn(err));
+  }, [isLoggedIn]);
+
   function handleSearchMovies() {
     return movieApi.getInitialsMovies()
       .then((initialMovies) => {
@@ -45,6 +51,7 @@ function App() {
         return initialMovies;
       })
   }
+
 
   const handleRegistration = async ({ userName, email, password }) => {
     setIsLoading(true);
@@ -58,7 +65,6 @@ function App() {
         setIsLoggedIn(false);
         setServerError(err)
         console.warn(err);
-        console.log("err");
       })
       .finally(() => setIsLoading(false));
   }
@@ -76,6 +82,7 @@ function App() {
             setCurrentUser(userInfo);
             localStorage.setItem('savedMovies', JSON.stringify(userMovies));
             setSavedMovies(userMovies);
+            setServerError('')
           })
           .catch((error) => {
             console.log(error);
@@ -85,45 +92,35 @@ function App() {
           });
       })
       .catch((error) => {
+        
         console.log(error);
         setUserMessageError('Неправильные почта или пароль');
+        setServerError(error)
         setTimeout(() => {
           setUserMessageError('');
         }, 2000);
       });
   };
 
-  // Карточки
   const handleSaveMovie = (movie) => {
     const jwt = localStorage.getItem('jwt');
-    const handledMovie = savedMovies.find((item) => {
-      return item.movieId === movie.id;
-    });
-    const isLiked = Boolean(handledMovie);
-    const id = handledMovie ? handledMovie._id : null;
-    if (isLiked) {
-      mainApi.deleteMovie(id, jwt)
-        .then((card) => {
-          const updateSavedMovies = savedMovies.filter(
-            (item) => card._id !== item._id
-          );
-          localStorage.setItem('savedMovies', updateSavedMovies);
-          setSavedMovies(updateSavedMovies);
-        })
-        .catch((error) => {
-          console.log(error);
-        })
-        .finally(() => setIsLoading(false));
+
+    const myCurrentMovie = savedMovies.filter((myMovie) => myMovie.movieId === movie.id)[0];
+
+    if (myCurrentMovie) {
+      mainApi.deleteMovie(myCurrentMovie._id, jwt)
+        .then(() => setSavedMovies(savedMovies.filter((myMovie) => myMovie._id !== myCurrentMovie._id)))
+        .catch((err) => {
+          console.warn(err);
+        });
     } else {
       mainApi.saveMovie(movie, jwt)
-        .then((newSavedMovie) => {
-          setSavedMovies((prev) => [...prev, newSavedMovie]);
-        })
-        .catch((error) => {
-          console.log(error);
+        .then((movie) => { setSavedMovies([...savedMovies, movie]) })
+        .catch((err) => {
+          console.warn(err);
         });
     }
-  };
+  }
 
   const handleDeleteMovie = (movie) => {
     setIsLoading(true);
@@ -196,7 +193,7 @@ function App() {
         setUserMessageError('');
         navigate(path);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log('err'));
     mainApi.getSavedMovies(jwt)
       .then((movies) => {
         setSavedMovies(movies);
@@ -236,25 +233,32 @@ function App() {
             isLoading={isLoading}
           />} />
 
-          <Route path='signin' element={isLoggedIn
-            ? <Navigate to='/' />
-            : <Login
-              onLoginUser={handleAuthorization}
-              serverError={serverError}
-              onServerError={userMessageError}
-              isLoading={isLoading}
-            />
-          } />
 
-          <Route path='signup' element={isLoggedIn
-            ? <Navigate to='/' />
-            : <Register
-              onRegisterUser={handleRegistration}
-              serverError={serverError}
-              onServerError={userMessageError}
-              isLoading={isLoading}
-            />
-          } />
+
+          {!isLoggedIn
+            ? (<>
+              <Route path='signin' element={isLoggedIn
+                ? <Navigate to='/' />
+                : <Login
+                  onLoginUser={handleAuthorization}
+                  serverError={serverError}
+                  onServerError={userMessageError}
+                  isLoading={isLoading}
+                />
+              } />
+
+              <Route path='signup' element={isLoggedIn
+                ? <Navigate to='/' />
+                : <Register
+                  onRegisterUser={handleRegistration}
+                  serverError={serverError}
+                  onServerError={userMessageError}
+                  isLoading={isLoading}
+                />
+              } />
+            </>)
+            : null}
+
 
           <Route path='*' element={<NotFoundPage />} />
         </Routes>
