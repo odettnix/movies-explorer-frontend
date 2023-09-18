@@ -92,7 +92,7 @@ function App() {
           });
       })
       .catch((error) => {
-        
+
         console.log(error);
         setUserMessageError('Неправильные почта или пароль');
         setServerError(error)
@@ -122,22 +122,32 @@ function App() {
     }
   }
 
+  // const handleDeleteMovie = (movie) => {
+  //   setIsLoading(true);
+  //   const jwt = localStorage.getItem('jwt');
+  //   mainApi.deleteMovie(movie._id, jwt)
+  //     .then(() => {
+  //       const updateSavedMovies = savedMovies.filter(
+  //         (item) => item._id !== movie._id
+  //       );
+  //       setSavedMovies(updateSavedMovies);
+  //       localStorage.setItem('savedMovies', JSON.stringify(updateSavedMovies));
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     })
+  //     .finally(() => setIsLoading(false));
+  // };
+
   const handleDeleteMovie = (movie) => {
     setIsLoading(true);
     const jwt = localStorage.getItem('jwt');
     mainApi.deleteMovie(movie._id, jwt)
-      .then(() => {
-        const updateSavedMovies = savedMovies.filter(
-          (item) => item._id !== movie._id
-        );
-        setSavedMovies(updateSavedMovies);
-        localStorage.setItem('savedMovies', JSON.stringify(updateSavedMovies));
-      })
-      .catch((error) => {
-        console.log(error);
-      })
-      .finally(() => setIsLoading(false));
-  };
+      .then(() => setSavedMovies(savedMovies.filter((myMovie) => myMovie._id !== movie._id)))
+      .catch((err) => {
+        console.warn(err);
+      });
+  }
 
   // Редактирование профиля
 
@@ -235,6 +245,8 @@ function App() {
 
 
 
+
+
           {!isLoggedIn
             ? (<>
               <Route path='signin' element={isLoggedIn
@@ -259,8 +271,10 @@ function App() {
             </>)
             : null}
 
-
           <Route path='*' element={<NotFoundPage />} />
+
+
+
         </Routes>
       </div>
     </CurrentUserContext.Provider>

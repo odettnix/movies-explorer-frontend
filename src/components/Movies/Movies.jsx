@@ -18,48 +18,6 @@ function Movies({ isLoggedIn, initialMovies, myMovies, onSubmit, onClickCardLike
   const [searchText, setSearchText] = useState(() => (getLocalData('searchData') && getLocalData('searchData').searchText) || '');
   const [isChecked, setIsChecked] = useState(() => (getLocalData('searchData') && getLocalData('searchData').isChecked) || false);
 
-  useEffect(() => {
-    if (!initialMovies.length) {
-      setIsLoading(true);
-
-      onSubmit()
-        .then((newInitialMovies) => {
-          const newFilterMovies = filterFilms(
-            newInitialMovies,
-            getLocalData('searchData')
-          );
-
-          setFilterMovies((prevFilterMovies) => {
-            setLocalData('filterMovies', newFilterMovies);
-            return newFilterMovies;
-          });
-        })
-        .catch((err) => {
-          console.warn(err);
-          setIsError(true);
-        })
-        .finally(() => setIsLoading(false));
-    } else {
-      setFilterMovies((prevFilterMovies) => {
-        const newFilterMovies = filterFilms(
-          initialMovies,
-          {
-            isChecked: isChecked,
-            searchText: searchText,
-          }
-        );
-
-        setLocalData('filterMovies', newFilterMovies);
-        return newFilterMovies;
-      });
-    }
-
-    setLocalData('searchData', {
-      'isChecked': isChecked,
-      'searchText': searchText,
-    });
-  }, [initialMovies, onSubmit, isChecked, searchText]);
-
   function handleSearchSubmit(searchText) {
     setSearchText(searchText);
 

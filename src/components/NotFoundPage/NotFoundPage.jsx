@@ -4,10 +4,8 @@ import { useNavigate } from "react-router-dom";
 function NotFoundPage() {
   const navigate = useNavigate();
 
-  const handleGoBack = () => {
-    navigate('/') // Вернуться на предыдущую страницу в истории браузера
-
-    // console.log(window.history.back)
+  const handleBackClick = () => {
+    navigate(-1);
   };
 
   return (
@@ -15,8 +13,8 @@ function NotFoundPage() {
       <h2 className="notfoundpage__error">404</h2>
       <p className="notfoundpage__errortext">Страница не найдена</p>
       <button
-        type="button"
-        onClick={handleGoBack}
+        type="hidden"
+        onClick={handleBackClick}
         className="notfoundpage__backbtn"
       >
         Назад
